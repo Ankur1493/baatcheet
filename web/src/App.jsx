@@ -13,8 +13,8 @@ export default function App() {
 
   return (
     <div className="">
-      <Messages />
-      <Input />
+      <Messages socket={socket} />
+      <Input socket={socket} />
     </div>
   );
 }

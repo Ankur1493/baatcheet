@@ -15,10 +15,14 @@ const io = new Server(httpServer, {
 });
 io.on('connection', (socket) => {
   console.log('a user connected');
+  socket.on("message", (message) => {
+    console.log(message);
+  })
   socket.on('disconnect', () => {
     console.log('user disconnected');
   });
 });
+
 
 httpServer.listen(3000, () => {
   console.log('server running at http://localhost:3000');

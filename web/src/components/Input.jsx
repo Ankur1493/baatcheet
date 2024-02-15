@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const Input = () => {
+const Input = ({ socket }) => {
 
   const [message, setMessage] = useState("")
 
@@ -10,6 +10,12 @@ const Input = () => {
 
   const handleSubmit = () => {
     console.log("Message Sent")
+    if (!message.length) {
+      return;
+    }
+
+    socket.emit("message", message);
+    setMessage("")
   }
 
   return (
