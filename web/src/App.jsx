@@ -1,6 +1,7 @@
 
 import Messages from "./components/Messages";
 import Input from "./components/Input";
+import ConnectionTestButton from "./components/ConnectionTestButton";
 import { io } from "socket.io-client";
 
 export default function App() {
@@ -15,6 +16,7 @@ export default function App() {
     <div className="">
       <Messages socket={socket} />
       <Input socket={socket} />
+      <ConnectionTestButton socket={socket} />
     </div>
   );
 }
