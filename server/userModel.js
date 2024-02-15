@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { friendSchema } from "./friendModel.js";
+
 
 const userSchema = mongoose.Schema({
   userName: {
@@ -7,10 +7,8 @@ const userSchema = mongoose.Schema({
     required: true,
     unique: true,
   },
-  friends: [friendSchema], // Embed the friend schema as an array in the user schema
 });
 
 // Create the user model
-const userModel = mongoose.model("User", userSchema);
+export const User = mongoose.model("User", userSchema);
 
-export { userModel };

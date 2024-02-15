@@ -3,6 +3,7 @@ import Messages from "./components/Messages";
 import Input from "./components/Input";
 import ConnectionTestButton from "./components/ConnectionTestButton";
 import { io } from "socket.io-client";
+import { SignInButton, SignOutButton, SignedIn, SignedOut } from "@clerk/clerk-react";
 
 export default function App() {
   const socket = io("http://localhost:3000", {
@@ -14,9 +15,15 @@ export default function App() {
 
   return (
     <div className="">
-      <Messages socket={socket} />
-      <Input socket={socket} />
-      <ConnectionTestButton socket={socket} />
+      <SignedIn>
+        <SignOutButton />
+        <Messages socket={socket} />
+        <Input socket={socket} />
+        <ConnectionTestButton socket={socket} />
+      </SignedIn>
+      <SignedOut>
+        <SignInButton />
+      </SignedOut>
     </div>
   );
 }
