@@ -1,0 +1,17 @@
+{
+  "name": "baatcheet",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "concurrently \"yarn workspace server start\" \"yarn workspace web dev\""
+  },
+  "workspaces": [
+    "server",
+    "web"
+  ],
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
