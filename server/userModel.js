@@ -7,6 +7,9 @@ const userSchema = mongoose.Schema({
     required: true,
     unique: true,
   },
+  friends: [{
+    type: mongoose.Schema.ObjectId,
+  }]
 });
 
 // Create the user model
