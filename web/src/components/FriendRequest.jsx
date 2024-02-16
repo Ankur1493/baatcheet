@@ -50,28 +50,28 @@ const FriendRequest = () => {
   }
 
   return (
-    <div className='h-20 bg-red-400 flex justify-around'>
+    <div className='h-36 w-full flex justify-between px-6'>
       <div>
-        <h1>Your Friends</h1>
-        <ul>
+        <h1 className='text-3xl font-bold text-sky-950'>Your Friends</h1>
+        <ul className='text-[20px] flex flex-col flex-wrap px-6'>
           {friends.length > 0 ? (
 
 
             friends.map(friend => (
-              <li key={friend._id}>{friend.userName}</li>
+              <li key={friend._id} className='list-disc'>{friend.userName}</li>
             ))
           ) : (
-            <h2>Send friend request to make friends</h2>
+            <h2 className='text-2xl text-red-300'>Send friend request to make friends</h2>
           )
           }
         </ul>
       </div>
-      <div>
+      <div className='w-[400px]'>
         <div>
-          <input value={friendUserName} onChange={handleFriendUserNameChange} placeholder="enter friend's user name" />
+          <input className='w-[310px] h-12 rounded-[10px] border-red-100 border-[2px] text-center bg-pink-50' value={friendUserName} onChange={handleFriendUserNameChange} placeholder="enter friend's user name" />
         </div>
         <div>
-          <button onClick={sendFriendRequest}>Send Request</button>
+          <button className='w-[210px] h-8 mt-4 rounded-[10px] border-red-100 border-[2px] text-center bg-pink-50' onClick={sendFriendRequest}>Send Request</button>
         </div>
       </div>
     </div>

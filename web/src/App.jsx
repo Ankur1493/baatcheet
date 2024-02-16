@@ -21,7 +21,6 @@ export default function App() {
         <FriendRequest />
         <Messages socket={socket} />
         <Input socket={socket} />
-        <ConnectionTestButton socket={socket} />
       </SignedIn>
       <SignedOut>
         <SignInButton />
