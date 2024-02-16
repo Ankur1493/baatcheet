@@ -23,7 +23,6 @@ const io = new Server(httpServer, {
 
 // Socket.io connections
 io.on('connection', (socket) => {
-  console.log('a user connected');
   socket.on("message", (message) => {
     io.emit('message', message);
   })
@@ -37,7 +36,6 @@ app.post(
   bodyParser.raw({ type: "application/json" }),
   async function(req, res) {
     const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
-    console.log(WEBHOOK_SECRET)
     if (!WEBHOOK_SECRET) {
       throw new Error("You need a WEBHOOK_SECRET in your .env");
     }
@@ -58,7 +56,6 @@ app.post(
 
     // Initiate Svix
     const wh = new Webhook(WEBHOOK_SECRET);
-    console.log(wh)
     let evt;
     try {
       evt = wh.verify(payload, {
@@ -66,9 +63,7 @@ app.post(
         "svix-timestamp": svix_timestamp,
         "svix-signature": svix_signature,
       });
-      console.log("verified")
       if (evt.type === "user.created") {
-        console.log("user creation")
         const { username } = evt.data;
         let user = await User.findOne({ userName: username });
         if (!user) {
@@ -114,17 +109,44 @@ app.post("/api/friend-request", async (req, res) => {
     await User.findByIdAndUpdate(senderId, { $addToSet: { friends: receiverId } });
     await User.findByIdAndUpdate(receiverId, { $addToSet: { friends: senderId } });
 
-    return res.status(201).json({ message: 'Friend request sent successfully' });
+    return res.status(201).json({
+      username: receiver,
+      _id: receiverId,
+    });
   } catch (err) {
-    console.error(err);
     return res.status(500).json({ message: "Server error" });
   }
 });
-// MongoDB connection
+
+
+
+app.get("/api/friends", async (req, res) => {
+  const { userName } = req.query;
+  try {
+    const activeUser = await User.findOne({ userName: userName });
+    if (!activeUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const userFriends = await User.aggregate([
+      { $match: { _id: { $in: activeUser.friends } } },
+      { $project: { _id: 1, userName: 1 } }
+    ]);
+
+    if (userFriends.length === 0) {
+      return res.status(200).json([]);
+    }
+
+    return res.status(200).json(userFriends);
+  } catch (err) {
+    console.error("Error fetching user friends:", err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 mongoose.connect(process.env.MONGO_DB_URI)
   .then(() => {
     console.log('MongoDB connected');
-    // Start the Express server once MongoDB is connected
     httpServer.listen(8000, () => {
       console.log('Server running at http://localhost:3000');
     });
