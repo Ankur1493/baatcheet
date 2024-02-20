@@ -7,9 +7,23 @@ import bodyParser from "body-parser";
 import { Webhook } from 'svix';
 import { User } from './userModel.js';
 import cors from "cors"
+import Redis from "ioredis";
+
 const app = express();
 dotenv.config();
-app.use(cors())
+app.use(cors());
+
+const pub = new Redis({
+  host: "us1-patient-seahorse-41396.upstash.io",
+  port: 41396,
+  password: process.env.REDIS_PASS_KEY,
+})
+const sub = new Redis({
+  host: "us1-patient-seahorse-41396.upstash.io",
+  port: 41396,
+  password: process.env.REDIS_PASS_KEY,
+})
+
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   connectionStateRecovery: true,
@@ -23,23 +37,36 @@ const io = new Server(httpServer, {
 
 // Socket.io connections
 io.on('connection', (socket) => {
-  socket.on("message", (data) => {
+  const handleMessage = async (data) => {
     const { message, roomId } = data;
     io.to(roomId).emit('message', message);
-  })
+    await pub.publish(roomId, message);
+    console.log("message sent to redis")
+  };
+
+  socket.on("message", async (data) => {
+    try {
+      await handleMessage(data);
+      console.log("message received by the server")
+    } catch (error) {
+      console.error("Error handling message:", error);
+    }
+  });
+
   socket.on("joinRoom", roomId => {
     socket.join(roomId);
-    console.log(`Room have been joined between these ${roomId}`)
-  })
+    console.log(`Room has been joined: ${roomId}`);
+  });
+
   socket.on("leaveRoom", roomId => {
     socket.leave(roomId);
-    console.log(`Room have been leaved ${roomId}`)
-  })
+    console.log(`Room has been left: ${roomId}`);
+  });
+
   socket.on('disconnect', () => {
-    console.log('user disconnected');
+    console.log('User disconnected');
   });
 });
-
 const webhookRawParser = bodyParser.raw({ type: 'application/json' });
 
 app.post(
