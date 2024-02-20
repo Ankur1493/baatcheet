@@ -1,9 +1,7 @@
-
-import Messages from "./components/Messages";
-import Input from "./components/Input";
 import { io } from "socket.io-client";
 import { SignInButton, SignOutButton, SignedIn, SignedOut } from "@clerk/clerk-react";
 import FriendRequest from "./components/FriendRequest";
+import ChatContainer from "./components/ChatContainer";
 
 export default function App() {
   const socket = io("http://localhost:8000", {
@@ -18,8 +16,7 @@ export default function App() {
       <SignedIn>
         <SignOutButton />
         <FriendRequest />
-        <Messages socket={socket} />
-        <Input socket={socket} />
+        <ChatContainer socket={socket} />
       </SignedIn>
       <SignedOut>
         <SignInButton />

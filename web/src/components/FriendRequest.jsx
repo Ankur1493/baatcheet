@@ -65,7 +65,7 @@ const FriendRequest = () => {
 
 
             friends.map(friend => (
-              <li key={friend._id} className={`list-disc ${selectedFriend ? 'text-red-300' : 'text-black'}`} ><button onClick={() => { setActiveFriend(friend.userName) }} > {friend.userName}</button></li>
+              <li key={friend._id} className={`${selectedFriend ? 'text-sky-700 text-[24px]' : 'text-black'}`} ><button onClick={() => { setActiveFriend(friend.userName) }} > {friend.userName}</button></li>
 
             ))
           ) : (
