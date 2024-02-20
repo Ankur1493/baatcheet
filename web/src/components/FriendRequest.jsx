@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { useUser } from '@clerk/clerk-react'
+import { useFriend } from '../friendContext';
 
 const FriendRequest = () => {
+
+  const { selectedFriend, setSelectedFriend } = useFriend();
+
+  const setActiveFriend = (username) => {
+    setSelectedFriend(username)
+  }
 
   const [friendUserName, setFriendUserName] = useState("");
   const [friends, setFriends] = useState([]);
@@ -41,7 +48,7 @@ const FriendRequest = () => {
         const data = response.json();
         setFriends(friends => [...friends, data]);
       } else {
-        console.error('Failed to send friend request:');
+        console.log('Failed to send friend request:');
       }
     } catch (err) {
       console.error(err)
@@ -58,7 +65,8 @@ const FriendRequest = () => {
 
 
             friends.map(friend => (
-              <li key={friend._id} className='list-disc'>{friend.userName}</li>
+              <li key={friend._id} className={`list-disc ${selectedFriend ? 'text-red-300' : 'text-black'}`} ><button onClick={() => { setActiveFriend(friend.userName) }} > {friend.userName}</button></li>
+
             ))
           ) : (
             <h2 className='text-2xl text-red-300'>Send friend request to make friends</h2>
@@ -74,7 +82,7 @@ const FriendRequest = () => {
           <button className='w-[210px] h-8 mt-4 rounded-[10px] border-red-100 border-[2px] text-center bg-pink-50' onClick={sendFriendRequest}>Send Request</button>
         </div>
       </div>
-    </div>
+    </div >
   )
 }
 

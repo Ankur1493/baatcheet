@@ -1,7 +1,6 @@
 
 import Messages from "./components/Messages";
 import Input from "./components/Input";
-import ConnectionTestButton from "./components/ConnectionTestButton";
 import { io } from "socket.io-client";
 import { SignInButton, SignOutButton, SignedIn, SignedOut } from "@clerk/clerk-react";
 import FriendRequest from "./components/FriendRequest";
