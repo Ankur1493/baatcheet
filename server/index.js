@@ -31,9 +31,11 @@ io.on('connection', (socket) => {
   });
 });
 
+const webhookRawParser = bodyParser.raw({ type: 'application/json' });
+
 app.post(
   "/api/webhooks",
-  bodyParser.raw({ type: "application/json" }),
+  webhookRawParser,
   async function(req, res) {
     const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
     if (!WEBHOOK_SECRET) {

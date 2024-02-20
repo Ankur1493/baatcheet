@@ -7,7 +7,8 @@ const FriendRequest = () => {
   const { selectedFriend, setSelectedFriend } = useFriend();
 
   const setActiveFriend = (username) => {
-    setSelectedFriend(username)
+    setSelectedFriend(username);
+    console.log(selectedFriend)
   }
 
   const [friendUserName, setFriendUserName] = useState("");
@@ -65,7 +66,7 @@ const FriendRequest = () => {
 
 
             friends.map(friend => (
-              <li key={friend._id} className={`${selectedFriend ? 'text-sky-700 text-[24px]' : 'text-black'}`} ><button onClick={() => { setActiveFriend(friend.userName) }} > {friend.userName}</button></li>
+              <li key={friend._id} className={`${selectedFriend === friend.userName ? 'text-sky-700 text-[24px]' : 'text-black'}`} ><button onClick={() => { setActiveFriend(friend.userName) }} > {friend.userName}</button></li>
 
             ))
           ) : (
