@@ -1,11 +1,19 @@
 import React, { useState } from 'react'
-
+import { useUser } from '@clerk/clerk-react'
+import { useFriend } from '../friendContext';
 const Input = ({ socket }) => {
 
   const [message, setMessage] = useState("")
+  const user = useUser();
+  const { selectedFriend } = useFriend();
 
   const handleMessageChange = (event) => {
     setMessage(prevMessage => prevMessage = event.target.value)
+  }
+
+  const getRoomId = () => {
+    const usernames = [user.user.username, selectedFriend].sort();
+    return usernames.join('_');
   }
 
   const handleSubmit = () => {
@@ -13,7 +21,9 @@ const Input = ({ socket }) => {
     if (!message.length) {
       return;
     }
-    socket.emit("message", message);
+    const roomId = getRoomId();
+    console.log(roomId)
+    socket.emit("message", { message, roomId });
     setMessage("")
   }
 

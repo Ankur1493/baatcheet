@@ -16,8 +16,8 @@ const Messages = ({ socket }) => {
     <div className='h-48'>
       <ul>
         {
-          messages.map((msg) => (
-            <li>{msg}</li>
+          messages.map((msg, index) => (
+            <li key={index}>{msg}</li>
           ))
         }
       </ul>

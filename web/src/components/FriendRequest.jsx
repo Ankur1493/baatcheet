@@ -2,18 +2,37 @@ import React, { useEffect, useState } from 'react'
 import { useUser } from '@clerk/clerk-react'
 import { useFriend } from '../friendContext';
 
-const FriendRequest = () => {
+const FriendRequest = ({ socket }) => {
 
   const { selectedFriend, setSelectedFriend } = useFriend();
-
-  const setActiveFriend = (username) => {
-    setSelectedFriend(username);
-    console.log(selectedFriend)
-  }
-
   const [friendUserName, setFriendUserName] = useState("");
   const [friends, setFriends] = useState([]);
   const user = useUser();
+
+  const setActiveFriend = (username) => {
+    setSelectedFriend(username);
+    console.log(selectedFriend);
+  }
+  const getRoomId = () => {
+    const usernames = [user.user.username, selectedFriend].sort();
+    return usernames.join('_');
+  }
+  let roomId = null
+  useEffect(() => {
+
+    if (selectedFriend) {
+      roomId = getRoomId()
+      socket.emit("joinRoom", roomId);
+    }
+
+    return () => {
+      if (roomId) {
+        socket.emit("leaveRoom", roomId);
+      }
+    };
+  }, [selectedFriend, socket, user.user.username])
+
+
   const handleFriendUserNameChange = (e) => {
     setFriendUserName(friendUserName => friendUserName = e.target.value);
   }

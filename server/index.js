@@ -23,8 +23,17 @@ const io = new Server(httpServer, {
 
 // Socket.io connections
 io.on('connection', (socket) => {
-  socket.on("message", (message) => {
-    io.emit('message', message);
+  socket.on("message", (data) => {
+    const { message, roomId } = data;
+    io.to(roomId).emit('message', message);
+  })
+  socket.on("joinRoom", roomId => {
+    socket.join(roomId);
+    console.log(`Room have been joined between these ${roomId}`)
+  })
+  socket.on("leaveRoom", roomId => {
+    socket.leave(roomId);
+    console.log(`Room have been leaved ${roomId}`)
   })
   socket.on('disconnect', () => {
     console.log('user disconnected');

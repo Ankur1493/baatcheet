@@ -15,7 +15,7 @@ export default function App() {
     <div className="">
       <SignedIn>
         <SignOutButton />
-        <FriendRequest />
+        <FriendRequest socket={socket} />
         <ChatContainer socket={socket} />
       </SignedIn>
       <SignedOut>
